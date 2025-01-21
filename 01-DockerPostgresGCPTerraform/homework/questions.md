@@ -1,3 +1,5 @@
+# Homework of this week
+
 ## 1 - Running python container and checking pip version
 ```bash
 docker run -it --entrypoint=bash python:3.12.8
@@ -11,6 +13,7 @@ pip 24.3.1 from /usr/local/lib/python3.12/site-packages/pip (python 3.12)
 ## 2 - Containers in network with docker compose 
 
 **PGAdmin should use 'db' as the hostname** because that is the name of the service defined in the YAML file, and it's the name that should be used by other services within the same Docker network.
+
 **The port number is '5432'**, because that is the port the PostgreSQL service is listening on inside the container.
 
 ## Preparing Postgres
@@ -65,4 +68,5 @@ docker run -it \
 ## 7 - Sequence of commands in Terraform
 
 As saw in the classes, that's the correct sequence of commands (plan is optional):
+
 'terraform init, terraform apply -auto-approve, terraform destroy
