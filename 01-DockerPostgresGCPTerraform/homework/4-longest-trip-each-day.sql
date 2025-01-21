@@ -1,4 +1,4 @@
--- 2029-10-31 -> 515.89 miles
+-- 2019-10-31 -> 515.89 miles
 SELECT
 	lpep_pickup_datetime::date, 
 	MAX(trip_distance) AS longest_trip
