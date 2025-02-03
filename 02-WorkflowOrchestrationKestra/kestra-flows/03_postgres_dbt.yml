@@ -1,0 +1,76 @@
+id: 003_postgres_dbt
+namespace: zoomcamp
+
+inputs:
+  - id: dbt_command
+    type: SELECT # indica que o usuário pode escolher qual input deseja
+    allowCustomValue: true # outros valores são permitidos
+    defaults: dbt build
+    values:
+      - dbt build
+      - dbt debug # use when running the first time to validate DB connection
+
+tasks:
+
+  # basicamente, aqui eu baixo os arquivos do repositório para o 'namespace' desse flow (nada mais que isso)
+  - id: sync
+    type: io.kestra.plugin.git.SyncNamespaceFiles
+    url: https://github.com/DataTalksClub/data-engineering-zoomcamp
+    branch: main
+    namespace: "{{ flow.namespace }}" # namespace desse flow
+    gitDirectory: 04-analytics-engineering/taxi_rides_ny # baixa todos os arquivos dessa pasta
+    dryRun: false # true seria apenas para simular a operação
+    disabled: true # essa task só precisa ser executada uma vez, para baixar os arquivos do repositório
+
+  # rodando o dbt em um container
+  - id: dbt-build
+    type: io.kestra.plugin.dbt.cli.DbtCLI
+
+
+    env: # env vars para o dbt
+      DBT_DATABASE: postgres-zoomcamp
+      DBT_SCHEMA: public # os modelos do dbt serão armazenados aqui
+    namespaceFiles: # permite usar os outputs da task anterior
+      enabled: true
+    
+    # criando o container com o dbt
+    containerImage: ghcr.io/kestra-io/dbt-postgres:latest
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+    
+    commands:
+      - dbt deps # baixando dependências do dbt
+      - "{{ inputs.dbt_command }}" # executando o comando
+
+    # o manifest armazena as execuções do dbt
+    storeManifest:
+      key: manifest.json
+      namespace: "{{ flow.namespace }}"
+    
+    # definindo o perfil de conexão
+    # 8 threads significa processamento em paralelo (?)
+    profiles: |
+      default:
+        outputs:
+          dev:
+            type: postgres
+            #host: postgres_zoomcamp
+            host: 172.30.108.19 # preciso usar o ip do WSL, pois o container do dbt não está na mesma rede do postgres
+            user: kestra
+            password: k3str4
+            port: 5432
+            dbname: postgres-zoomcamp
+            schema: public
+            threads: 8
+            connect_timeout: 10
+            priority: interactive
+        target: dev
+
+description: |
+  Note that you need to adjust the models/staging/schema.yml file to match your database and schema. Select and edit that Namespace File from the UI. Save and run this flow. Once https://github.com/DataTalksClub/data-engineering-zoomcamp/pull/565/files is merged, you can ignore this note as it will be dynamically adjusted based on env variables.
+  ```yaml
+  sources:
+    - name: staging
+      database: postgres-zoomcamp
+      schema: public
+  ```

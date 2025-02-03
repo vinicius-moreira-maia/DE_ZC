@@ -48,3 +48,4 @@ ny-taxi-pgs-data
 keys
 .terraform
 .ipynb*
+01_pipeline_python.yml

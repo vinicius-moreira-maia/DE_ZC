@@ -1,0 +1,30 @@
+id: 04_gcp_kv
+namespace: zoomcamp
+
+# criando pares chave-valor no storage do kestra ("KV store" / "Key-Value store")
+# Lembrar de não deixar as credenciais expostas aqui...
+
+tasks:
+  - id: gcp_project_id
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_PROJECT_ID
+    kvType: STRING
+    value: taxi-rides-ny-448023 # id do projeto
+
+  - id: gcp_location
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_LOCATION
+    kvType: STRING
+    value: US
+
+  - id: gcp_bucket_name
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_BUCKET_NAME
+    kvType: STRING
+    value: taxi-rides-ny-448023-terra-bucket # nome do bucket, que é o data lake (deve ser único globalmente)
+
+  - id: gcp_dataset
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_DATASET
+    kvType: STRING
+    value: demo_dataset
