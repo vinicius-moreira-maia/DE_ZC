@@ -10,6 +10,8 @@ De forma geral, o arquivo **docker-compose** deste diretório implanta 3 serviç
 
 O **BigQuery** e os **buckets do Google Cloud Storage** foram utilizados em um segundo cenário de testes de ETL, como alternativa ao modelo on-premise. O **Terraform** foi utilizado para provisionar ambos os recursos, através da criação de um usuário de serviço.
 
+Arquivos de provisionamento: https://github.com/vinicius-moreira-maia/DE_ZC/tree/main/01-DockerPostgresGCPTerraform/terrademo 
+
 ## Arquivos da pasta kestra-flows
 
 Os arquivos que contêm "postgres" no nome são os que definem o ETL no modelo on-premise, enquanto os que possuem "gcp" são os que definem o ETL no modelo cloud.
