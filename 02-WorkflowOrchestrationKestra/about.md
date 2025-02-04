@@ -41,7 +41,9 @@ São definidas duas tasks principais em uma estrutura condicional: **if_yellow_t
 ![alt text](image-3.png)
 
 **3.** É realizado um **truncate** na tabela de staging para garantir que não haja dados residuais de outras cargas.
+
 **4.** O dataset em CSV é copiado para a tabela de staging.
+
 **5.** A tabela de staging é atualizada criando hashes para cada registro único, utilizando a função **md5**.
 
 ![alt text](image-4.png)
