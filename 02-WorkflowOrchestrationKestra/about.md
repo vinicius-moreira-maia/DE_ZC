@@ -56,7 +56,8 @@ São definidas duas tasks principais em uma estrutura condicional: **if_yellow_t
 
 São definidas duas tasks principais em uma estrutura condicional: **if_yellow_taxi** e **if_green_taxi**. Em ambos os casos, o processo do pipeline segue as seguintes etapas:
 
-**1.** O CSV é copiado para o Data Lake (bucket).
+**1.** O CSV é copiado para o **Data Lake (bucket)**.
+
 **2.** A tabela principal é criada no BigQuery, caso não exista.
 
 ![alt text](image-7.png)
@@ -66,6 +67,7 @@ São definidas duas tasks principais em uma estrutura condicional: **if_yellow_t
 ![alt text](image-8.png)
 
 **4.** A partir da consulta da **EXTERNAL TABLE**, é criada uma nova tabela, já fazendo o hash (**md5**) para garantir a unicidade de cada registro.
+
 **5.** Por fim, é feito um **MERGE** entre a tabela principal e a tabela que contém os hashes.
 
 ![alt text](image-9.png)
@@ -123,7 +125,9 @@ Two main tasks are defined in a conditional structure: **if_yellow_taxi** and **
 ![alt text](image-3.png)
 
 3. A **truncate** is performed on the staging table to ensure there are no residual data from previous loads.
+
 4. The CSV dataset is copied to the staging table.
+
 5. The staging table is updated by creating hashes for each unique record using the **md5** function.
 
 ![alt text](image-4.png)
@@ -141,6 +145,7 @@ Two main tasks are defined in a conditional structure: **if_yellow_taxi** and **
 Two main tasks are defined in a conditional structure: **if_yellow_taxi** and **if_green_taxi**. In both cases, the pipeline process follows these steps:
 
 1. The CSV is copied to the Data Lake (bucket).
+
 2. The main table is created in BigQuery if it doesn't exist.
 
 ![alt text](image-7.png)
@@ -150,6 +155,7 @@ Two main tasks are defined in a conditional structure: **if_yellow_taxi** and **
 ![alt text](image-8.png)
 
 4. From the **EXTERNAL TABLE** query, a new table is created, applying the hash (**md5**) to ensure the uniqueness of each record.
+
 5. Finally, a **MERGE** is performed between the main table and the table containing the hashes.
 
 ![alt text](image-9.png)
