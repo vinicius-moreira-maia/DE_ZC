@@ -1,6 +1,6 @@
 # Orquestração de Workflows utilizando Kestra
 
-Este repositório contém um arquivo **docker-compose**, utilizado para implantar serviços que permitem o uso local do **Kestra** para testes de ETL, além de uma pasta chamada 'flows', que contém os códigos de todas as pipelines desenvolvidas durante os testes.
+Este repositório contém um arquivo **docker-compose**, utilizado para implantar serviços que permitem o uso local do **Kestra** para testes de ETL além de uma pasta chamada 'flows', que contém os códigos de todas as pipelines desenvolvidas durante os testes.
 
 ## Docker Compose
 
@@ -10,7 +10,7 @@ De forma geral, o arquivo **docker-compose** deste diretório implanta 3 serviç
 
 O **BigQuery** e os **buckets do Google Cloud Storage** foram utilizados em um segundo cenário de testes de ETL, como alternativa ao modelo on-premise. O **Terraform** foi utilizado para provisionar ambos os recursos, através da criação de um usuário de serviço.
 
-## Arquivos da pasta Kestra-Flows
+## Arquivos da pasta kestra-flows
 
 Os arquivos que contêm "postgres" no nome são os que definem o ETL no modelo on-premise, enquanto os que possuem "gcp" são os que definem o ETL no modelo cloud.
 
@@ -24,29 +24,31 @@ A partir desses inputs, são definidas variáveis que são referenciadas por tod
 
 Nos dois casos, o dataset (em CSV) é baixado utilizando a mesma task. 
 
+![alt text](image-11.png)
+
 #### No caso do PostgreSQL:
 
 São definidas duas tasks principais em uma estrutura condicional: **if_yellow_taxi** e **if_green_taxi**. Em ambos os casos, o processo do pipeline segue as seguintes etapas:
 
-1. A tabela principal é criada, caso não exista.
+**1.**** A tabela principal é criada, caso não exista.
 
 ![alt text](image-2.png)
 
-2. A tabela de staging é criada, caso não exista.
+**2.** A tabela de staging é criada, caso não exista.
 
 ![alt text](image-3.png)
 
-3. É realizado um **truncate** na tabela de staging para garantir que não haja dados residuais de outras cargas.
-4. O dataset em CSV é copiado para a tabela de staging.
-5. A tabela de staging é atualizada, criando hashes para cada registro único, utilizando a função **md5**.
+**3.** É realizado um **truncate** na tabela de staging para garantir que não haja dados residuais de outras cargas.
+**4.** O dataset em CSV é copiado para a tabela de staging.
+**5.** A tabela de staging é atualizada criando hashes para cada registro único, utilizando a função **md5**.
 
 ![alt text](image-4.png)
 
-6. É feito um **MERGE** entre a tabela de staging e a tabela principal, para que apenas registros inéditos sejam adicionados à tabela definitiva. 
+**6.** É feito um **MERGE** entre a tabela de staging e a tabela principal para que apenas registros inéditos sejam adicionados à tabela definitiva. 
 
 ![alt text](image-5.png)
 
-7. Por fim, o arquivo CSV baixado é removido do storage do Kestra.
+**7.** Por fim, o arquivo CSV baixado é removido do storage do Kestra.
 
 ![alt text](image-6.png)
 
@@ -54,17 +56,17 @@ São definidas duas tasks principais em uma estrutura condicional: **if_yellow_t
 
 São definidas duas tasks principais em uma estrutura condicional: **if_yellow_taxi** e **if_green_taxi**. Em ambos os casos, o processo do pipeline segue as seguintes etapas:
 
-1. O CSV é copiado para o Data Lake (bucket).
-2. A tabela principal é criada no BigQuery, caso não exista.
+**1.** O CSV é copiado para o Data Lake (bucket).
+**2.** A tabela principal é criada no BigQuery, caso não exista.
 
 ![alt text](image-7.png)
 
-3. Os dados do CSV são consultados através de uma **EXTERNAL TABLE**, para que o BigQuery consuma os dados sem realizar replicação.
+**3.** Os dados do CSV são consultados através de uma **EXTERNAL TABLE**, para que o BigQuery consuma os dados sem realizar replicação.
 
 ![alt text](image-8.png)
 
-4. A partir da consulta da **EXTERNAL TABLE**, é criada uma nova tabela, já fazendo o hash (**md5**) para garantir a unicidade de cada registro.
-5. Por fim, é feito um **MERGE** entre a tabela principal e a tabela que contém os hashes.
+**4.** A partir da consulta da **EXTERNAL TABLE**, é criada uma nova tabela, já fazendo o hash (**md5**) para garantir a unicidade de cada registro.
+**5.** Por fim, é feito um **MERGE** entre a tabela principal e a tabela que contém os hashes.
 
 ![alt text](image-9.png)
 
