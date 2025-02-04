@@ -1,10 +1,6 @@
 id: 002_postgres_taxi_scheduled
 namespace: zoomcamp
 
-description: |
-  Best to add a label `backfill:true` from the UI to track executions created via a backfill.
-  CSV data used here comes from: https://github.com/DataTalksClub/nyc-tlc-data/releases
-
 # assim eu garanto que esse workflow não seja executado em paralelo (principalmente para o caso de backfills)
 concurrency:
   limit: 1
