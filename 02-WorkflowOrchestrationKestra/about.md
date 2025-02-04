@@ -102,7 +102,9 @@ In general, the **docker-compose** file in this directory deploys 3 services loc
 
 **BigQuery** and **Google Cloud Storage buckets** were used in a second ETL testing scenario as an alternative to the on-premise model. **Terraform** was used to provision both resources by creating a service account.
 
-## Kestra-Flows Folder Files
+Terraform files: https://github.com/vinicius-moreira-maia/DE_ZC/tree/main/01-DockerPostgresGCPTerraform/terrademo 
+
+## kestra-flows Folder Files
 
 Files containing "postgres" in their names define the ETL process in the on-premise model, while those containing "gcp" define the ETL process in the cloud model.
 
@@ -120,27 +122,27 @@ In both cases, the dataset (in CSV format) is downloaded using the same task.
 
 Two main tasks are defined in a conditional structure: **if_yellow_taxi** and **if_green_taxi**. In both cases, the pipeline process follows these steps:
 
-1. The main table is created if it doesn't exist.
+**1.** The main table is created if it doesn't exist.
 
 ![alt text](image-2.png)
 
-2. The staging table is created if it doesn't exist.
+**2.** The staging table is created if it doesn't exist.
 
 ![alt text](image-3.png)
 
-3. A **truncate** is performed on the staging table to ensure there are no residual data from previous loads.
+**3.** A **truncate** is performed on the staging table to ensure there are no residual data from previous loads.
 
-4. The CSV dataset is copied to the staging table.
+**4.** The CSV dataset is copied to the staging table.
 
-5. The staging table is updated by creating hashes for each unique record using the **md5** function.
+**5.** The staging table is updated by creating hashes for each unique record using the **md5** function.
 
 ![alt text](image-4.png)
 
-6. A **MERGE** is performed between the staging table and the main table to ensure that only new records are added to the final table.
+**6.** A **MERGE** is performed between the staging table and the main table to ensure that only new records are added to the final table.
 
 ![alt text](image-5.png)
 
-7. Finally, the downloaded CSV file is removed from Kestra's storage.
+**7.** Finally, the downloaded CSV file is removed from Kestra's storage.
 
 ![alt text](image-6.png)
 
@@ -148,19 +150,19 @@ Two main tasks are defined in a conditional structure: **if_yellow_taxi** and **
 
 Two main tasks are defined in a conditional structure: **if_yellow_taxi** and **if_green_taxi**. In both cases, the pipeline process follows these steps:
 
-1. The CSV is copied to the Data Lake (bucket).
+**1.** The CSV is copied to the Data Lake (bucket).
 
-2. The main table is created in BigQuery if it doesn't exist.
+**2.** The main table is created in BigQuery if it doesn't exist.
 
 ![alt text](image-7.png)
 
-3. The CSV data is queried through an **EXTERNAL TABLE** so that BigQuery consumes the data without replicating it.
+**3.** The CSV data is queried through an **EXTERNAL TABLE** so that BigQuery consumes the data without replicating it.
 
 ![alt text](image-8.png)
 
-4. From the **EXTERNAL TABLE** query, a new table is created, applying the hash (**md5**) to ensure the uniqueness of each record.
+**4.** From the **EXTERNAL TABLE** query, a new table is created, applying the hash (**md5**) to ensure the uniqueness of each record.
 
-5. Finally, a **MERGE** is performed between the main table and the table containing the hashes.
+**5.** Finally, a **MERGE** is performed between the main table and the table containing the hashes.
 
 ![alt text](image-9.png)
 
