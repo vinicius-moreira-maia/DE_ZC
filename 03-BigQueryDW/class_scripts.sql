@@ -2,14 +2,14 @@
 
 -- criando tabelas com base em arquivos parquet contidos no bucket
 -- '*' é coringa para quaisquer caracteres
--- o BQ não conhece detalhes como aramazenamento, número de linhas, etc. de EXTERNAL TABLES, pois a fonte de dados em si está fora do escopo do bd
+-- o BQ não conhece detalhes como aramazenamento, número de linhas, etc. de EXTERNAL TABLES, pois a fonte de dados em si está fora do escopo do bq
 CREATE OR REPLACE EXTERNAL TABLE demo_dataset.external_yellow_tripdata
 OPTIONS (
   format = 'PARQUET',
   uris = ['https://storage.cloud.google.com/taxi-rides-ny-448023-terra-bucket/yellow_tripdata_2024-*.parquet'] 
 );
 
-SELECT * FROM demo_dataset.external_yellow_tripdata limit 10;
+SELECT * FROM demo_dataset.external_yellow_tripdata limit 10; -- NÃO é bom consultar assim
 
 -- criando uma tabela materializada a partir de tabela externa
 CREATE OR REPLACE TABLE demo_dataset.yellow_tripdata AS
@@ -20,7 +20,7 @@ SELECT * FROM demo_dataset.yellow_tripdata limit 10;
 -- criando uma tabela particionada a partir de tabela externa
 CREATE OR REPLACE TABLE demo_dataset.yellow_tripdata_part
 PARTITION BY
-  DATE(tpep_pickup_datetime) AS
+  DATE(tpep_pickup_datetime) AS -- granularidade default é por dia
 SELECT * FROM demo_dataset.external_yellow_tripdata;
 
 -- Impactos do particionamento
