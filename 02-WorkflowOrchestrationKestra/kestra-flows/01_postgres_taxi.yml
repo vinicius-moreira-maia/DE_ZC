@@ -284,7 +284,7 @@ tasks:
 
 # plugin que configura o acesso ao PGS (containerizado)
 # esse plugin já configura a url de conexão para TODAS as tasks, caso contrário eu teria que fornecer individualmente
-# 'host.docker.internal' é o host de o Docker usa para se comunicar com o SO, e já que o kestra também está nele, é possível o acesso
+# 'host.docker.internal' é o host que o Docker usa para se comunicar com o SO, e já que o kestra também está nele, é possível o acesso
 pluginDefaults:
   - type: io.kestra.plugin.jdbc.postgresql
     values:

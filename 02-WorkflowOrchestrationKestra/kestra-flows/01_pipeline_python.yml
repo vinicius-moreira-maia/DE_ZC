@@ -1,0 +1,47 @@
+id: 001_pipeline_python
+namespace: company.team
+
+inputs:
+  - id: kestra_logo
+    type: STRING
+    defaults: "https://raw.githubusercontent.com/kestra-io/kestra/refs/heads/develop/ui/src/assets/icon.png"
+  
+  - id: discord_webhook_url
+    type: STRING
+    defaults: "https://discord.com/api/webhooks/1333912959822467072/6x_HF-7W_SjqLgd-LR9-D3UU16p4SpucJ7lEp4a38DaqZiAchSJt3fo7A9ZL1mWst7NE"
+
+# trigger para executar o pipeline a cada hora
+# uma vez salvo o arquivo, o trigger já estará ativado 
+triggers:
+  - id: hourly_trigger
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 * * * *"  # executa no início de cada hora (minuto 0 de cada hora)
+
+# cada plugin tem suas propriedades (consultar documentação)
+tasks:
+  - id: python_script
+    type: io.kestra.plugin.scripts.python.Commands
+    namespaceFiles:
+      # para que os arquivos relacionados a este pipeline sejam achados
+      enabled: true
+    beforeCommands:
+      # criando venv e instalando dependências
+      - python3 -m venv .venv
+      - . .venv/bin/activate
+      - pip install -r scripts/requirements.txt
+    commands:
+      - python scripts/script.py
+    runner: PROCESS # deprecated!
+
+  - id: output_gh_stars
+    type: io.kestra.plugin.core.log.Log
+    message: "Número de estrelas do repo do kestra no GH: {{ outputs.python_script.vars.gh_stars }}" # referenciando o output da task anterior
+
+  - id: send_notification
+    type: io.kestra.plugin.notifications.discord.DiscordExecution
+    content: "Total de Estrelas do repo do Kestra no GH: {{ outputs.python_script.vars.gh_stars }}"
+    username: Kestra
+    avatarUrl: "{{ inputs.kestra_logo }}"
+    url: "{{ inputs.discord_webhook_url }}"
+
+disabled: true

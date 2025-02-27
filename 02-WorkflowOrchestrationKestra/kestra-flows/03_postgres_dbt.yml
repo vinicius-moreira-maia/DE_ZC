@@ -26,7 +26,6 @@ tasks:
   - id: dbt-build
     type: io.kestra.plugin.dbt.cli.DbtCLI
 
-
     env: # env vars para o dbt
       DBT_DATABASE: postgres-zoomcamp
       DBT_SCHEMA: public # os modelos do dbt serão armazenados aqui
@@ -39,7 +38,7 @@ tasks:
       type: io.kestra.plugin.scripts.runner.docker.Docker
     
     commands:
-      - dbt deps # baixando dependências do dbt
+      - dbt deps # instalando dependências do dbt
       - "{{ inputs.dbt_command }}" # executando o comando
 
     # o manifest armazena as execuções do dbt

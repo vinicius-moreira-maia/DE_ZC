@@ -7,6 +7,8 @@ volumes:
     driver: local
 
 services:
+  
+  # postgres como storage para o kestra
   postgres:
     image: postgres
     volumes:
@@ -21,6 +23,7 @@ services:
       timeout: 10s
       retries: 10
 
+  # esse serviço só começa quando o serviço anterior estiver em execução
   kestra:
     image: kestra/kestra:latest
     pull_policy: always
