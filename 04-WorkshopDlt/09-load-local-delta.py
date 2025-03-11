@@ -36,6 +36,6 @@ pipeline = dlt.pipeline(
 )
 
 # executando a pipeline
-# na carga os dados serão transformados em tabelas delta (que são vários parquet's com uma camnada de metadados em cima)
+# na carga os dados serão transformados em tabelas delta (que são vários parquet's com uma camada de metadados em cima)
 info = pipeline.run(ny_taxi, loader_file_format="parquet", table_format="delta")
 print(info)

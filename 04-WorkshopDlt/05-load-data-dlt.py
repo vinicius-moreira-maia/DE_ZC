@@ -2,6 +2,8 @@ import dlt
 from dlt.sources.helpers.rest_client import RESTClient
 from dlt.sources.helpers.rest_client.paginators import PageNumberPaginator
 
+# -> aqui ele usa o nome do arquivo .py para criar o arquivo .duckdb
+
 # esse decorador faz um agrupamento lógico dos dados, criando um recurso
 # 'rides' será o nome do recurso, e será o nome da tabela
 @dlt.resource(name="rides") 

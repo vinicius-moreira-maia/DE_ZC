@@ -11,12 +11,9 @@ Sempre que eu executo a pipeline, o dlt mantém guardado o último registro inse
 
 # o filtro é definido como parâmetro da função
 @dlt.resource(name="rides", write_disposition="append")
-def ny_taxi(
-    cursor_date=dlt.sources.incremental(
-        "Trip_Dropoff_DateTime",   # coluna a ser controlada
-        initial_value="2009-06-15",   # data de início
-        )
-    ):
+def ny_taxi( cursor_date=dlt.sources.incremental( "Trip_Dropoff_DateTime",   # coluna a ser controlada
+                                                  initial_value="2009-06-15",   # data de início
+                                                )):
     client = RESTClient(
         base_url="https://us-central1-dlthub-analytics.cloudfunctions.net",
         paginator=PageNumberPaginator(

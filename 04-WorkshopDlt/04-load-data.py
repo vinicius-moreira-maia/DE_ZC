@@ -1,6 +1,6 @@
 import duckdb
 
-# conectando a um banco duckdb em meória
+# conectando a um banco duckdb em memória
 conn = duckdb.connect("ny_taxi_manual.db")
 
 # criando a tabela, já com a estrutura normalizada
