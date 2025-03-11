@@ -1,5 +1,6 @@
 # First-time build can take upto 10 mins.
 
+# mesma versão do airflow da imagem do docker-compose
 FROM apache/airflow:2.10.5
 
 ENV AIRFLOW_HOME=/opt/airflow
@@ -8,6 +9,7 @@ USER root
 RUN apt-get update -qq && apt-get install vim -qqq
 # git gcc g++ -qqq
 
+# é preciso executar o pip com o usuário do airflow, não com o root
 COPY requirements.txt .
 USER airflow
 RUN pip install --no-cache-dir -r requirements.txt
@@ -17,6 +19,7 @@ USER root
 
 SHELL ["/bin/bash", "-o", "pipefail", "-e", "-u", "-x", "-c"]
 
+# checar se a versão do sdk é a mais atual
 ARG CLOUD_SDK_VERSION=514.0.0 
 ENV GCLOUD_HOME=/home/google-cloud-sdk
 
